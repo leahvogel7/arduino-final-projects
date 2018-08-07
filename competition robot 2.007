@@ -1,0 +1,80 @@
+#include <Servo.h>
+
+int buttonState = 0;
+#define buttonPin 10
+#define LY 3
+#define RY 5
+#define RX 7
+Servo rightservo;
+Servo leftservo;
+Servo liftservo;
+#define PHOTOR A5  //define a pin for Photo resistor
+const int threshold = 100; // will depend on what resistor is used
+int leah = 0;
+int autoTimer = 0;
+
+void setup() {
+
+    rightservo.attach(4);
+    leftservo.attach(6);
+    liftservo.attach(8);
+    pinMode(buttonPin, INPUT);
+    Serial.begin(9600);
+    delay(25);
+    pinMode(3, INPUT);
+    pinMode(5, INPUT);
+    pinMode(7, INPUT);
+
+}
+
+void loop() {
+
+
+
+Serial.println(analogRead(PHOTOR)); // reading values to serial monitor
+ 
+ if(analogRead(A5) < threshold )
+ { 
+    leah = 1;
+ }
+    
+ if (leah == 1 && autoTimer < 30000)
+ {
+    autoTimer = millis();
+    buttonState = digitalRead(buttonPin);
+    if (buttonState == HIGH) 
+        {
+        rightservo.write(90);
+        leftservo.write(90);
+        liftservo.write(0);
+        delay(5000);
+        liftservo.write(90);
+        delay(3000);
+        //digitalWrite(4,LOW);
+        //digitalWrite(6,LOW);
+        //digitalWrite(8,LOW);
+        //delay(100000);
+        }
+
+    else
+        {
+        rightservo.write(0);
+        leftservo.write(175);
+        liftservo.write(90);
+        delay(25);
+        }
+   if (autoTimer >= 30000)
+   {
+    leah = 0;
+   }
+    }
+   
+
+    else
+    delay(3000);
+    digitalWrite(4,LOW);
+    digitalWrite(6,LOW);
+    digitalWrite(8,LOW);
+    delay(100000);
+  }
+
